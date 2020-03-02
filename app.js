@@ -1,8 +1,12 @@
 const express = require('express');
+
 const path = require('path');
-const cards = require('./routes/api/cards');
-const users = require('./routes/api/users');
-const notFound = require('./routes/api/notFound');
+
+const cards = require('./routes/cards');
+
+const users = require('./routes/users');
+
+const notFound = require('./routes/notFound');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,4 +25,4 @@ app.use('/cards', cards);
 app.use('/users', users);
 
 // Error not found
-app.use('/', notFound);
+app.use(notFound);

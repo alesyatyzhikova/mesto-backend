@@ -1,5 +1,6 @@
 const router = require('express').Router();
-const users = require('../../data/users.json');
+
+const users = require('../data/users.json');
 
 router.get('/', (req, res) => {
   res.json(users);
@@ -9,13 +10,13 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const userId = req.params.id;
 
-  const foundId = users.some((user) => user._id === userId);
+  const foundUser = users.find((user) => user._id === userId);
 
-  if (foundId) {
-    res.json(users.filter((user) => user._id === userId));
-  } else {
+  if (!foundUser) {
     res.status(404).json({ message: 'Нет пользователя с таким id' });
   }
+
+  return res.json(foundUser);
 });
 
 module.exports = router;
