@@ -14,6 +14,7 @@ router.get('/:id', (req, res) => {
 
   if (!foundUser) {
     res.status(404).json({ message: 'Нет пользователя с таким id' });
+    return;
   }
 
   return res.json(foundUser);

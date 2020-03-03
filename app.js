@@ -1,11 +1,8 @@
 const express = require('express');
-
 const path = require('path');
 
 const cards = require('./routes/cards');
-
 const users = require('./routes/users');
-
 const notFound = require('./routes/notFound');
 
 const { PORT = 3000 } = process.env;
