@@ -1,6 +1,8 @@
 const express = require('express');
-const path = require('path');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
+const ownerId = require('./middlewares/ownerId');
 const cards = require('./routes/cards');
 const users = require('./routes/users');
 const notFound = require('./routes/notFound');
@@ -10,16 +12,26 @@ const { PORT = 3000 } = process.env;
 // Init express
 const app = express();
 
-app.listen(PORT);
+// База данных
+mongoose.connect('mongodb://localhost:27017/mestodb', {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
 
-// Static files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Get all cards
-app.use('/cards', cards);
+// Id пользователя
+app.use(ownerId);
 
-// Get all users or single user
-app.use('/users', users);
+// Карточки
+app.use(cards);
 
-// Error not found
+// Пользователи
+app.use(users);
+
+// Ошибки для несуществующих страниц
 app.use(notFound);
+
+app.listen(PORT);

@@ -1,23 +1,20 @@
 const router = require('express').Router();
 
-const users = require('../data/users.json');
+const { getUsers, getUser, createUser, updateUser, updateUserAvatar } = require('../controllers/users');
 
-router.get('/', (req, res) => {
-  res.json(users);
-});
+// Получаем всех пользователей
+router.get('/users', getUsers);
 
-// Запрос для получения объекта отдельного пользователя по id
-router.get('/:id', (req, res) => {
-  const userId = req.params.id;
+// Получаем объект отдельного пользователя по id
+router.get('/users/:id', getUser);
 
-  const foundUser = users.find((user) => user._id === userId);
+// Создаем пользователя
+router.post('/users', createUser);
 
-  if (!foundUser) {
-    res.status(404).json({ message: 'Нет пользователя с таким id' });
-    return;
-  }
+// Обновляем информацию о пользователе
+router.patch('/users/me', updateUser);
 
-  return res.json(foundUser);
-});
+// Обновляем аватар пользователя
+router.patch('/users/me/avatar', updateUserAvatar);
 
 module.exports = router;
