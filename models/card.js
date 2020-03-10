@@ -12,10 +12,8 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validate: {
-        validator(value) {
-          return validator.isUrl(value);
-        },
+      validator(value) {
+        return validator.isUrl(value);
       },
     },
   },
