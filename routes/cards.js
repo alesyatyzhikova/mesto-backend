@@ -3,18 +3,18 @@ const router = require('express').Router();
 const { getCards, createCard, deleteCard, likeCard, dislikeCard } = require('../controllers/cards');
 
 // Получить все карточки
-router.get('/cards', getCards);
+router.get('/', getCards);
 
 // Создать карточку
-router.post('/cards', createCard);
+router.post('/', createCard);
 
 // Удалить карточку
-router.delete('/cards/:id', deleteCard);
+router.delete('/:id', deleteCard);
 
 // Поставить лайк
-router.put('/cards/:id/likes', likeCard);
+router.put('/:id/likes', likeCard);
 
 // Удалить лайк
-router.delete('/cards/:id/likes', dislikeCard);
+router.delete('/:id/likes', dislikeCard);
 
 module.exports = router;

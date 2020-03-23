@@ -1,3 +1,6 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
 
@@ -19,10 +22,39 @@ module.exports.getUser = (req, res) => {
 
 // Создаем пользователя
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
-    .then((user) => res.send({ data: user }))
+  const { name, about, avatar, email, password } = req.body;
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
+    .then((user) => res.send({
+      data: {
+        name: user.name,
+        about: user.about,
+        avatar: user.avatar,
+        email: user.email,
+      },
+    }))
     .catch((err) => res.status(500).send({ message: 'Что-то пошло не так', err: err.message }));
+};
+
+// Аутентификация
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some secret key', { expiresIn: '7d' });
+      res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+      });
+      res.send({ token });
+    })
+    .catch((err) => res.status(401).send({ message: 'Что-то пошло не так', err: err.message }));
 };
 
 // Обновляем данные о пользователе
