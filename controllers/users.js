@@ -47,21 +47,20 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some secret key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, 'some-key', { expiresIn: '7d' });
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
-      });
-      res.send({ token });
+      }).send(token);
     })
     .catch((err) => res.status(401).send({ message: 'Что-то пошло не так', err: err.message }));
 };
 
 // Обновляем данные о пользователе
 module.exports.updateUser = (req, res) => {
-  const userId = req.user._id;
   const { name, about } = req.body;
-  User.findByIdAndUpdate(userId,
+
+  User.findByIdAndUpdate(req.user._id,
     { name, about },
     {
       new: true,
@@ -74,9 +73,9 @@ module.exports.updateUser = (req, res) => {
 
 // Обновляем аватар пользователя
 module.exports.updateUserAvatar = (req, res) => {
-  const userId = req.user._id;
   const { avatar } = req.body;
-  User.findByIdAndUpdate(userId,
+
+  User.findByIdAndUpdate(req.user._id,
     { avatar },
     {
       new: true,

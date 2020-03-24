@@ -22,18 +22,9 @@ module.exports.createCard = (req, res) => {
 
 // Удаляем карточку
 module.exports.deleteCard = (req, res) => {
-  Card.findById(req.params.id)
+  Card.findByIdAndDelete(req.params.id)
     .orFail(() => new NotFoundError('Нет такой карточки'))
-    .then((card) => {
-      if (card.owner._id.toString() !== req.user._id) {
-        return res.status(401).send({ message: 'Нет прав на удаление' });
-      }
-      return Card.findByIdAndDelete(req.params.id)
-        .then((cardId) => {
-          res.send({ data: cardId });
-        })
-        .catch((err) => res.status(404).send({ message: 'Нет такой карточки', err: err.message }));
-    })
+    .then((card) => res.send({ data: card }))
     .catch((err) => res.status(err.statusCode || 500).send({ message: 'Что-то пошло не так', err: err.message }));
 };
 

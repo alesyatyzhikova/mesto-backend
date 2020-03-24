@@ -1,44 +1,43 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      minlength: 2,
-      maxlength: 30,
-      required: true,
+      minlength: [2, 'Слишком короткое имя'],
+      maxlength: [30, 'Слишком длинное имя'],
+      required: [true, 'Обязательное поле'],
     },
     about: {
       type: String,
-      minlength: 2,
-      maxlength: 30,
-      required: true,
+      minlength: [2, 'Слишком короткая запись'],
+      maxlength: [30, 'Слишком длинная запись'],
+      required: [true, 'Обязательное поле'],
     },
     avatar: {
       type: String,
-      required: true,
+      required: [true, 'Обязательное поле'],
       validate: {
-        validator(value) {
-          return validator.isURL(value);
-        },
+        validator: (value) => validator.isURL(value),
+        message: 'Введите ссылку',
       },
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Обязательное поле'],
       unique: true,
       validate: {
-        validator(value) {
-          return validator.isEmail(value);
-        },
+        validator: (value) => validator.isEmail(value),
+        message: 'Введите верный формат для email',
       },
     },
     password: {
       type: String,
-      required: true,
-      minlength: 8,
+      required: [true, 'Обязательное поле'],
+      minlength: [8, 'Слишком короткий пароль'],
       select: false,
     },
   },
@@ -62,5 +61,7 @@ userSchema.statics.findUserByCredentials = function (email, password) {
         });
     });
 };
+
+userSchema.plugin(uniqueValidator, { message: 'Такой email уже существует' });
 
 module.exports = mongoose.model('user', userSchema);

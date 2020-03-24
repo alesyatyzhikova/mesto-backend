@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const { PORT, DATABASE } = require('./config');
 
+// const routes = require('./routes');
 const routes = require('./routes');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -17,6 +18,7 @@ mongoose.connect(DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
 app.use(bodyParser.json());
@@ -27,6 +29,6 @@ app.post('/signin', login);
 
 app.use(auth);
 
-app.use('/', routes);
+app.use(routes);
 
 app.listen(PORT);
