@@ -1,15 +1,16 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = (req, res, next) => {
-  // const token = req.headers.cookie;
-  const token = req.headers.cookie.replace('jwt=', '');
+const { JWT_SECRET_KEY } = require('../config');
 
-  if (!token) return res.status(401).send('Ошибка');
+module.exports = (req, res, next) => {
+  const token = req.headers.cookie;
+
+  if (!token) return res.status(401).send({ message: 'Необходима авторизация' });
 
   let payload;
 
   try {
-    payload = jwt.verify(token, 'some-key');
+    payload = jwt.verify(token.replace('jwt=', ''), JWT_SECRET_KEY);
   } catch (err) {
     return res.status(401).send({ message: 'Необходима авторизация' });
   }

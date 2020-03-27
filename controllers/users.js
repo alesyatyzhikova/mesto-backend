@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
+const { JWT_SECRET_KEY } = require('../config');
 
 // Получить всех пользователей
 module.exports.getUsers = (req, res) => {
@@ -23,6 +24,7 @@ module.exports.getUser = (req, res) => {
 // Создаем пользователя
 module.exports.createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
+
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name,
@@ -45,9 +47,10 @@ module.exports.createUser = (req, res) => {
 // Аутентификация
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
+
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET_KEY, { expiresIn: '7d' });
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
