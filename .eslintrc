@@ -3,6 +3,8 @@
   "rules": {
     "no-underscore-dangle": "off",
     "linebreak-style": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "consistent-return": "off",
+    "func-names": "off"
   }
 }

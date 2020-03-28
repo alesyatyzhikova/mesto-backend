@@ -13,18 +13,23 @@ module.exports.getCards = (req, res) => {
 // Создаем карточку
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
-  const ownerId = req.user._id;
-
-  Card.create({ name, link, owner: ownerId })
+  const owner = req.user._id;
+  Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => res.status(err.statusCode || 500).send({ message: 'Что-то пошло не так', err: err.message }));
 };
 
 // Удаляем карточку
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndDelete(req.params.id)
+  Card.findById(req.params.id)
     .orFail(() => new NotFoundError('Нет такой карточки'))
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (card.owner._id.toString() !== req.user._id) {
+        return res.status(401).send({ message: 'Нет прав на удаление карточки' });
+      }
+      return Card.findByIdAndDelete(req.params.id)
+        .then((cardId) => res.send({ data: cardId }));
+    })
     .catch((err) => res.status(err.statusCode || 500).send({ message: 'Что-то пошло не так', err: err.message }));
 };
 

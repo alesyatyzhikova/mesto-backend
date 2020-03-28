@@ -27,6 +27,9 @@ Mesto  Node.js/MongoDB
 
 * http://localhost:3000 - для главной страницы
 
+* POST http://localhost:3000/signup - создание пользователя
+* POST http://localhost:3000/signin - авторизация поьзователя
+
 * http://localhost:3000/cards - для получения json-списка всех карточек
 * POST http://localhost:3000/cards - для создания карточки
 * DELETE http://localhost:3000/cards/id - для удаления карточки
@@ -36,7 +39,7 @@ Mesto  Node.js/MongoDB
 * http://localhost:3000/users - для получения списка всех пользователей
 * http://localhost:3000/users/id - для получения объекта пользователя с указанным id
 * POST http://localhost:3000/users - создаем пользователя
-* PATCH http://localhost:3000/users/me - обновляем информацию о пользователе
-* PATCH http://localhost:3000/users/me/avatar - обновляем аватар пользователя
+* PATCH http://localhost:3000/users/id - обновляем информацию о пользователе
+* PATCH http://localhost:3000/users/id/avatar - обновляем аватар пользователя
 
 * http://localhost:3000/что_угодно - вернет ошибку со статусом 404 - ресурс не найден

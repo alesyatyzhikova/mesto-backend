@@ -4,10 +4,11 @@ const bodyParser = require('body-parser');
 
 const { PORT, DATABASE } = require('./config');
 
-const ownerId = require('./middlewares/ownerId');
-const cards = require('./routes/cards');
-const users = require('./routes/users');
-const notFound = require('./routes/notFound');
+// const routes = require('./routes');
+const routes = require('./routes');
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
+
 
 // Init express
 const app = express();
@@ -17,21 +18,17 @@ mongoose.connect(DATABASE, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
+  useUnifiedTopology: true,
 });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Id пользователя
-app.use(ownerId);
+app.post('/signup', createUser);
+app.post('/signin', login);
 
-// Карточки
-app.use(cards);
+app.use(auth);
 
-// Пользователи
-app.use(users);
-
-// Ошибки для несуществующих страниц
-app.use(notFound);
+app.use(routes);
 
 app.listen(PORT);

@@ -1,20 +1,18 @@
 const router = require('express').Router();
 
-const { getUsers, getUser, createUser, updateUser, updateUserAvatar } = require('../controllers/users');
+const { getUsers, getUser, updateUser, updateUserAvatar } = require('../controllers/users');
+const verifyUser = require('../middlewares/verifyUser');
 
 // Получаем всех пользователей
-router.get('/users', getUsers);
+router.get('/', getUsers);
 
 // Получаем объект отдельного пользователя по id
-router.get('/users/:id', getUser);
-
-// Создаем пользователя
-router.post('/users', createUser);
+router.get('/:id', getUser);
 
 // Обновляем информацию о пользователе
-router.patch('/users/me', updateUser);
+router.patch('/:id', verifyUser, updateUser);
 
 // Обновляем аватар пользователя
-router.patch('/users/me/avatar', updateUserAvatar);
+router.patch('/:id/avatar', verifyUser, updateUserAvatar);
 
 module.exports = router;
