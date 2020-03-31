@@ -3,26 +3,26 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
-const { JWT_SECRET_KEY } = require('../config');
+const { JWT_SECRET } = require('../config');
 
 // Получить всех пользователей
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .orFail(() => new NotFoundError('Пользователи отсутствуют'))
     .then((users) => res.send({ data: users }))
-    .catch((err) => res.status(err.statusCode || 500).send({ message: 'Что-то пошло не так', err: err.message }));
+    .catch(next);
 };
 
 // Объект пользователя по id
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.id)
     .orFail(() => new NotFoundError('Нет такого пользователя'))
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(err.statusCode || 500).send({ message: 'Что-то пошло не так', err: err.message }));
+    .catch(next);
 };
 
 // Создаем пользователя
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
 
   bcrypt.hash(password, 10)
@@ -41,26 +41,26 @@ module.exports.createUser = (req, res) => {
         email: user.email,
       },
     }))
-    .catch((err) => res.status(500).send({ message: 'Что-то пошло не так', err: err.message }));
+    .catch(next);
 };
 
 // Аутентификация
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET_KEY, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.cookie('jwt', token, {
         maxAge: 3600000 * 24 * 7,
         httpOnly: true,
       }).send(token);
     })
-    .catch((err) => res.status(401).send({ message: 'Что-то пошло не так', err: err.message }));
+    .catch(next);
 };
 
 // Обновляем данные о пользователе
-module.exports.updateUser = (req, res) => {
+module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id,
@@ -71,11 +71,11 @@ module.exports.updateUser = (req, res) => {
       upsert: true,
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: 'Что-то пошло не так', err: err.message }));
+    .catch(next);
 };
 
 // Обновляем аватар пользователя
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id,
@@ -86,5 +86,5 @@ module.exports.updateUserAvatar = (req, res) => {
       upsert: true,
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: 'Что-то пошло не так', err: err.message }));
+    .catch(next);
 };

@@ -21,6 +21,7 @@ Mesto  Node.js/MongoDB
 * Установить зависимости: npm init => npm install
 * Запустить сервер командой npm run start
 * Для автоматической перезагрузки сервера использовать команду npm run dev
+* Для автоматического запуска приложения после падение через crash-test использовать команду pm2 start app.js --watch
 
 
 ###### Запросы для сервера: ######
@@ -39,7 +40,12 @@ Mesto  Node.js/MongoDB
 * http://localhost:3000/users - для получения списка всех пользователей
 * http://localhost:3000/users/id - для получения объекта пользователя с указанным id
 * POST http://localhost:3000/users - создаем пользователя
-* PATCH http://localhost:3000/users/id - обновляем информацию о пользователе
+* PATCH http://localhost:3000/users/id -А обновляем информацию о пользователе
 * PATCH http://localhost:3000/users/id/avatar - обновляем аватар пользователя
+
+* GET http://localhost:3000/crash-test - краш тест приложения
+
+* https://api.mestnet.tk/ - обратиться к серверу
+* https://mestnet.tk/ - обратиться к фронту
 
 * http://localhost:3000/что_угодно - вернет ошибку со статусом 404 - ресурс не найден
