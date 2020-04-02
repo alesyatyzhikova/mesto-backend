@@ -38,6 +38,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Обязательное поле'],
       minlength: [8, 'Слишком короткий пароль'],
+      validate: {
+        validator: (value) => /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\S+$).{8,}$/.test(value),
+        message: 'Пароль должен состоять из строчных и заглавных латинских букв, цифр и специальных символов',
+      },
       select: false,
     },
   },

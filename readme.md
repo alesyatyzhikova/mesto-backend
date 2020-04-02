@@ -46,6 +46,7 @@ Mesto  Node.js/MongoDB
 * GET http://localhost:3000/crash-test - краш тест приложения
 
 * https://api.mestnet.tk/ - обратиться к серверу
+* 84.201.145.68 - обратиться к серверу по IP адресу
 * https://mestnet.tk/ - обратиться к фронту
 
 * http://localhost:3000/что_угодно - вернет ошибку со статусом 404 - ресурс не найден
