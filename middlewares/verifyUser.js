@@ -1,11 +1,13 @@
 
+const NotAuthError = require('../errors/notAuthError');
+
 function verifyUser(req, res, next) {
   try {
     if (req.user._id.toString() !== req.params.id) {
-      return res.status(401).send({ message: 'Нет прав на изменение профиля' });
+      throw new NotAuthError('Нет прав на изменение профиля');
     }
   } catch (err) {
-    return res.status(500).send({ message: 'Что-то пошло не так', err: err.message });
+    next(err);
   }
 
   next();

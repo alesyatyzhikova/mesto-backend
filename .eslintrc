@@ -5,6 +5,7 @@
     "linebreak-style": "off",
     "object-curly-newline": "off",
     "consistent-return": "off",
-    "func-names": "off"
+    "func-names": "off",
+    "no-unused-vars": "off"
   }
 }
